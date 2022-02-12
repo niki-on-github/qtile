@@ -40,8 +40,7 @@ __all__ = [
     "Volume",
 ]
 
-re_vol = re.compile(r"\[(\d?\d?\d?)%\]")
-
+re_vol = re.compile(r"(\d?\d?\d?)%")
 
 class Volume(base._TextBox):
     """Widget that display and change volume
@@ -72,6 +71,8 @@ class Volume(base._TextBox):
         ("volume_up_command", None, "Volume up command"),
         ("volume_down_command", None, "Volume down command"),
         ("get_volume_command", None, "Command to get the current volume"),
+        ("check_mute_command", None, "Command to check mute status"),
+        ("check_mute_string", "[off]", "String to look for to check muted status in the output of ``check_mute_command``."),
         (
             "step",
             2,
@@ -185,16 +186,22 @@ class Volume(base._TextBox):
             if self.get_volume_command:
                 get_volume_cmd = self.get_volume_command
 
-            mixer_out = self.call_process(get_volume_cmd)
+            mixer_out = subprocess.getoutput(get_volume_cmd)
         except subprocess.CalledProcessError:
             return -1
 
-        if "[off]" in mixer_out:
+        check_mute = mixer_out
+        if self.check_mute_command:
+            check_mute = subprocess.getoutput(self.check_mute_command)
+        
+        if self.check_mute_string in check_mute:
             return -1
 
         volgroups = re_vol.search(mixer_out)
         if volgroups:
             return int(volgroups.groups()[0])
+        elif "pamixer" in self.get_volume_command:
+            return mixer_out
         else:
             # this shouldn't happen
             return -1
