@@ -40,7 +40,7 @@ __all__ = [
     "Volume",
 ]
 
-re_vol = re.compile(r"(\d?\d?\d?)%?")
+re_vol = re.compile(r"(\d?\d?\d?)%")
 
 
 class Volume(base._TextBox):
