@@ -40,7 +40,7 @@ __all__ = [
     "Volume",
 ]
 
-re_vol = re.compile(r"(\d?\d?\d?)%")
+re_vol = re.compile(r"(\d?\d?\d?)%?")
 
 
 class Volume(base._TextBox):
@@ -205,8 +205,6 @@ class Volume(base._TextBox):
         volgroups = re_vol.search(mixer_out)
         if volgroups:
             return int(volgroups.groups()[0])
-        elif "pamixer" in self.get_volume_command:
-            return mixer_out
         else:
             # this shouldn't happen
             return -1
