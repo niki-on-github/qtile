@@ -165,8 +165,19 @@ class VerticalTile(_SimpleLayoutBase):
                     if index > self.clients.index(self.maximized):
                         y = y - sec_pane_height + main_pane_height
 
+            margin_size = self.margin
+            if not isinstance(margin_size, list):
+                margin_size = [margin_size] * 4
+
+            margin_size = [
+                    round((margin_size[0] + 0.1)/2) if window != self.clients[0] and self.clients[0] != self.clients[-1] else margin_size[0],
+                    margin_size[1],
+                    round((margin_size[2] - 0.1)/2) if window != self.clients[-1] and self.clients[0] != self.clients[-1] else margin_size[2],
+                    margin_size[3],
+                ]
+
             window.place(
-                screen_rect.x, y, width, height, border_width, border_color, margin=self.margin
+                screen_rect.x, y, width, height, border_width, border_color, margin=margin_size
             )
             window.unhide()
         else:

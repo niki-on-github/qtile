@@ -260,6 +260,18 @@ class Columns(Layout):
                 margin_size = self.margin_on_single
         width = int(0.5 + col.width * screen_rect.width * 0.01 / len(self.columns))
         x = screen_rect.x + int(0.5 + pos * screen_rect.width * 0.01 / len(self.columns))
+
+        if not isinstance(margin_size, list):
+            margin_size = [margin_size] * 4
+
+
+        margin_size = [
+                round((margin_size[0] + 0.1)/2) if client != col[0] and col[0] != col[-1] else margin_size[0],
+                round((margin_size[1] + 0.1)/2) if client not in self.columns[-1] and len(self.columns) > 1 else margin_size[1],
+                round((margin_size[2] - 0.1)/2) if client != col[-1] and col[0] != col[-1] else margin_size[2],
+                round((margin_size[3] - 0.1)/2) if client not in self.columns[0] and len(self.columns) > 1 else margin_size[3],
+            ]
+
         if col.split:
             pos = 0
             for c in col:
@@ -268,6 +280,7 @@ class Columns(Layout):
                 pos += col.heights[c]
             height = int(0.5 + col.heights[client] * screen_rect.height * 0.01 / len(col))
             y = screen_rect.y + int(0.5 + pos * screen_rect.height * 0.01 / len(col))
+
             client.place(
                 x, y, width - 2 * border, height - 2 * border, border, color, margin=margin_size
             )
