@@ -2,7 +2,7 @@
 # Contributor: none
 
 pkgname=qtile-git
-pkgver=0.21.0.r16.g5cb1d94a
+pkgver=0.21.0.r17.ga0889917
 pkgrel=1
 pkgdesc="A full-featured, pure-Python tiling window manager. (git version)"
 arch=('x86_64')
